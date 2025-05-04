@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import react-big-calendar styles */
+@import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+
+        --primary: 262.1 83.3% 57.8%;
+        /* Vibrant Purple */
+        --primary-foreground: 210 40% 98%;
+
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 262.1 83.3% 57.8%;
+        /* Match primary */
+
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+
+        --primary: 262.1 83.3% 57.8%;
+        /* Keep vibrant purple */
+        --primary-foreground: 210 40% 98%;
+
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 262.1 83.3% 57.8%;
+        /* Match primary */
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+}
+
+/* Add custom gradient background */
+body {
+    background: linear-gradient(135deg, hsl(var(--primary)/0.1) 0%, hsl(var(--background)) 30%, hsl(var(--background)) 70%, hsl(210 40% 96.1%/0.1) 100%);
+    min-height: 100vh;
+}
+
+/* Customizations for react-big-calendar */
+.rbc-calendar {
+    @apply border-border rounded-lg shadow-sm bg-card text-card-foreground p-4;
+}
+
+.rbc-toolbar {
+    @apply mb-4 flex flex-wrap items-center justify-between gap-2;
+}
+
+.rbc-toolbar button {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3;
+}
+
+.rbc-toolbar button.rbc-active {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.rbc-toolbar .rbc-toolbar-label {
+    @apply text-lg font-semibold text-foreground flex-grow text-center;
+}
+
+.rbc-btn-group {
+    @apply flex gap-1;
+}
+
+.rbc-btn-group button:first-child {
+    @apply rounded-l-md;
+}
+
+.rbc-btn-group button:last-child {
+    @apply rounded-r-md;
+}
+
+.rbc-header {
+    @apply text-sm font-medium text-muted-foreground text-center py-2 border-b border-border;
+}
+
+.rbc-day-bg {
+    @apply border-l border-border;
+}
+
+.rbc-day-bg:first-child {
+    @apply border-l-0;
+}
+
+.rbc-month-view,
+.rbc-time-view {
+    @apply border border-border rounded-b-md;
+}
+
+.rbc-month-row {
+    @apply min-h-[120px] border-b border-border;
+    /* Ensure rows have height */
+}
+
+.rbc-row-content {
+    @apply flex;
+}
+
+.rbc-event {
+    @apply rounded-md p-1 text-xs shadow-sm border border-transparent cursor-pointer focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1;
+    /* Default event color - customize further */
+    @apply bg-secondary text-secondary-foreground;
+}
+
+/* Example Platform Colors */
+.rbc-event.platform-facebook {
+    @apply bg-blue-100 border-blue-200 text-blue-800;
+}
+
+.rbc-event.platform-instagram {
+    @apply bg-pink-100 border-pink-200 text-pink-800;
+}
+
+.rbc-event.platform-twitter {
+    @apply bg-sky-100 border-sky-200 text-sky-800;
+}
+
+.rbc-event.platform-linkedin {
+    @apply bg-indigo-100 border-indigo-200 text-indigo-800;
+}
+
+
+.rbc-event-label {
+    @apply font-medium truncate block;
+}
+
+.rbc-event-content {
+    @apply text-xs;
+}
+
+.rbc-time-header,
+.rbc-time-content {
+    @apply border-t border-border;
+}
+
+.rbc-time-slot {
+    @apply border-t border-border;
+}
+
+.rbc-timeslot-group {
+    @apply min-h-[40px];
+    /* Adjust height for time slots */
+}
+
+.rbc-current-time-indicator {
+    @apply bg-primary h-0.5;
+}
+
+.rbc-off-range-bg {
+    @apply bg-muted/30;
+}
+
+.rbc-today {
+    @apply bg-accent/50;
+}
