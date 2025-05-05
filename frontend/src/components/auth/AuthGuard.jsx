@@ -1,20 +1,18 @@
-// src/components/AuthGuard.jsx
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AuthGuard = ({ children }) => {
+    const { isAuthenticated, isLoading } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
-        const user = localStorage.getItem('user');
-        const token = localStorage.getItem('token');
-
-        if (!user || !token) {
+        if (!isLoading && !isAuthenticated) {
             navigate('/login');
         }
-    }, [navigate]);
+    }, [isAuthenticated, isLoading, navigate]);
 
-    return <>{children}</>;
+    return isAuthenticated ? children : null;
 };
 
 export default AuthGuard;

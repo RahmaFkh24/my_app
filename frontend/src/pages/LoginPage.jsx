@@ -1,4 +1,15 @@
+/*
 
+for the login after login successfully , it redirect to the login page
+but when i refresh it few times it redirect to the dashboard page
+
+fix this error
+
+
+
+
+
+*/
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -21,21 +32,15 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const success = login(email, password);
-    setIsLoading(false);
-    if (success) {
-      // AuthContext handles navigation trigger via useEffect watching isAuthenticated
-      // Check if onboarding is needed
-      const isNewUser = localStorage.getItem('isNewUser') !== 'false';
-      if (isNewUser) {
-        navigate('/onboarding');
-      } else {
-        navigate('/dashboard');
+
+    try {
+      const success = await login(email, password);
+      if (success) {
+        const isNewUser = localStorage.getItem('isNewUser') === 'true';
+        navigate(isNewUser ? '/onboarding' : '/dashboard');
       }
-    } else {
-      // Toast is shown by AuthContext
+    } finally {
+      setIsLoading(false);
     }
   };
 

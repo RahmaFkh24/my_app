@@ -1,111 +1,136 @@
-
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 
 const AuthContext = createContext(null);
 
-const getUsers = () => {
-  const users = localStorage.getItem('users');
-  return users ? JSON.parse(users) : {};
-};
-
-const saveUsers = (users) => {
-  localStorage.setItem('users', JSON.stringify(users));
-};
-
-// Mock function to generate a simple JWT-like string
-const generateMockToken = (email) => {
-  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-  const payload = btoa(JSON.stringify({ email, iat: Date.now() }));
-  const signature = btoa('mock-signature'); // In real app, this uses a secret key
-  return `${header}.${payload}.${signature}`;
-};
-
-
 export const AuthProvider = ({ children }) => {
   const { toast } = useToast();
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Check for token presence instead of just boolean
-    return !!localStorage.getItem('authToken');
-  });
-  const [currentUser, setCurrentUser] = useState(() => {
-    const user = localStorage.getItem('currentUser');
-    return user ? JSON.parse(user) : null;
-  });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Check for existing session on initial load
   useEffect(() => {
-    // Store token and user info if authenticated
-    if (isAuthenticated && currentUser && currentUser.token) {
-      localStorage.setItem('authToken', currentUser.token);
-      localStorage.setItem('currentUser', JSON.stringify({ email: currentUser.email, name: currentUser.name })); // Store only necessary info
-    } else {
-      // Clear auth data if not authenticated
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('currentUser');
-    }
-  }, [isAuthenticated, currentUser]);
+    const verifyAuth = async () => {
+      const token = localStorage.getItem('authToken');
 
-  const signup = (name, email, password) => {
-    const users = getUsers();
-    if (users[email]) {
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Add Bearer prefix explicitly
+        const response = await fetch('http://localhost:5000/api/users/me', {
+          headers: {
+            Authorization: `Bearer ${token}`  // <-- Add this Bearer prefix
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setCurrentUser({
+            email: userData.email,
+            name: userData.name,
+            token,
+          });
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error('Auth verification failed:', error);
+      }
+      setIsLoading(false);
+    };
+
+    verifyAuth();
+  }, []);
+
+  const signup = async (name, email, password) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('isNewUser', 'true');
+
+      setCurrentUser({
+        email: data.email,
+        name: data.name,
+        token: data.token,
+      });
+      setIsAuthenticated(true);
+
+      toast({
+        title: "Account Created",
+        description: `Welcome, ${data.name}! Let's get you set up.`,
+      });
+      return true;
+    } catch (error) {
       toast({
         title: "Signup Failed",
-        description: "User already exists.",
+        description: error.message,
         variant: "destructive",
       });
       return false;
     }
-    // Store name along with password (still insecure for demo)
-    users[email] = { password, name };
-    saveUsers(users);
-
-    const token = generateMockToken(email);
-    const newUser = { email, name, token };
-
-    localStorage.setItem('isNewUser', 'true'); // Mark as new user for onboarding
-    setIsAuthenticated(true);
-    setCurrentUser(newUser); // Set current user with token
-
-    toast({
-      title: "Account Created",
-      description: `Welcome, ${name}! Let's get you set up.`,
-    });
-    return true;
   };
 
+  const login = async (email, password) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-  const login = (email, password) => {
-    const users = getUsers();
-    if (users[email] && users[email].password === password) {
-      const token = generateMockToken(email);
-      const user = { email, name: users[email].name, token }; // Include name from stored data
+      const data = await response.json();
 
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
+      // ADD HERE (SIGNUP SUCCESS)
+      localStorage.setItem('authToken', data.token);
+      console.log('Stored Token (Signup):', data.token);
+      setCurrentUser({
+        email: data.email,
+        name: data.name,
+        token: data.token,
+      });
       setIsAuthenticated(true);
-      setCurrentUser(user);
 
-      const isNew = localStorage.getItem('isNewUser') === 'true'; // Check if onboarding was pending
+      const isNew = localStorage.getItem('isNewUser') === 'true';
       if (!isNew) {
         toast({
           title: "Login Successful",
-          description: `Welcome back, ${user.name}!`,
+          description: `Welcome back, ${data.name}!`,
         });
       }
-      // If isNew is true, the redirect to onboarding will happen in LoginPage/App logic
       return true;
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      return false;
     }
-    toast({
-      title: "Login Failed",
-      description: "Invalid email or password.",
-      variant: "destructive",
-    });
-    return false;
   };
 
   const logout = () => {
-    setIsAuthenticated(false);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('isNewUser');
     setCurrentUser(null);
-    localStorage.removeItem('isNewUser'); // Clear onboarding status on logout
-    // Effect hook will handle clearing token and user data from localStorage
+    setIsAuthenticated(false);
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",
@@ -113,12 +138,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, currentUser, login, logout, signup }}>
+    <AuthContext.Provider value={{
+      isAuthenticated,
+      currentUser,
+      isLoading,
+      login,
+      logout,
+      signup
+    }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+export const useAuth = () => useContext(AuthContext);
