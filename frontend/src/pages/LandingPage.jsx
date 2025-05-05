@@ -1,84 +1,157 @@
 
-    import React from 'react';
-    import { Link } from 'react-router-dom';
-    import { Button } from '@/components/ui/button';
-    import { motion } from 'framer-motion';
-    import { Facebook, Instagram, Twitter, Linkedin, Zap } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Zap, CheckCircle, Users, BarChart2, Bot, Repeat, Users2, Rocket, Star } from 'lucide-react';
 
-    const LandingPage = () => {
-      const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: { staggerChildren: 0.2, delayChildren: 0.3 },
-        },
-      };
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 },
+  },
+};
 
-      const itemVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
-      };
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 100 } },
+};
 
-      const iconVariants = {
-        initial: { scale: 0, rotate: -180 },
-        animate: { scale: 1, rotate: 0, transition: { type: 'spring', stiffness: 260, damping: 20, delay: 0.5 } }
-      };
+const featureVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 120, damping: 10 } },
+  hover: { scale: 1.05, transition: { duration: 0.2 } }
+};
 
-      return (
+const testimonialVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+};
+
+
+const features = [
+  { icon: Zap, title: "Smart Scheduling", description: "Post across LinkedIn, Instagram, Facebook, TikTok, YouTube, Reddit, and more." },
+  { icon: Bot, title: "AI Assistant", description: "Generate text, captions, and post ideas quickly with our integrated AI." },
+  { icon: Repeat, title: "Automation", description: "Automate repetitive tasks to save time and focus on strategy." },
+  { icon: BarChart2, title: "Performance Analytics", description: "Track detailed statistics to understand your impact." },
+  { icon: Users2, title: "Team Collaboration", description: "Create and approve content together seamlessly." },
+];
+
+const testimonials = [
+  { quote: "Social Pulse revolutionized how we manage our clients' accounts. The AI writer is a lifesaver!", author: "Marketing Agency Owner" },
+  { quote: "Finally, a tool that brings all my platforms together. Scheduling is so much easier now.", author: "Freelance Content Creator" },
+  { quote: "The analytics are clear and actionable. We've seen a real improvement in engagement.", author: "Startup Founder" },
+];
+
+
+const LandingPage = () => {
+  return (
+    <motion.div
+      className="flex flex-col items-center min-h-screen p-6 pt-16 md:pt-24 bg-gradient-to-b from-background via-purple-50 dark:via-purple-900/10 to-blue-50 dark:to-blue-900/10"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Hero Section */}
+      <motion.section variants={itemVariants} className="text-center max-w-4xl mx-auto mb-20 md:mb-32">
         <motion.div
-          className="flex flex-col items-center justify-center min-h-screen text-center p-6 bg-gradient-to-br from-purple-100 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/30"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.1, type: 'spring', stiffness: 150 }}
+          className="mb-6"
         >
-          <motion.div variants={iconVariants} initial="initial" animate="animate" className="absolute top-10 left-10 text-primary opacity-20">
-             <Facebook size={60} />
-          </motion.div>
-           <motion.div variants={iconVariants} initial="initial" animate="animate" className="absolute bottom-10 right-10 text-blue-400 opacity-20">
-             <Twitter size={60} />
-          </motion.div>
-          <motion.div variants={iconVariants} initial="initial" animate="animate" className="absolute top-1/3 right-20 text-pink-500 opacity-20">
-             <Instagram size={50} />
-          </motion.div>
-           <motion.div variants={iconVariants} initial="initial" animate="animate" className="absolute bottom-1/4 left-20 text-blue-700 opacity-20">
-             <Linkedin size={50} />
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="relative z-10">
-             <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: 'spring', stiffness: 150 }}
-                className="mb-6"
-             >
-                <Zap className="h-20 w-20 text-primary inline-block p-3 bg-primary/10 rounded-full shadow-lg" />
-             </motion.div>
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-pink-500">
-              Manage Social Media Effortlessly
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-              Schedule posts, track analytics, and engage your audience across all platforms from one simple dashboard. Focus on creating, we'll handle the rest.
-            </p>
-            <motion.div variants={itemVariants}>
-              <Link to="/login">
-                <Button size="lg" className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
-                  Get Started Now
-                </Button>
-              </Link>
-            </motion.div>
-            <motion.div variants={itemVariants} className="mt-8">
-               <p className="text-sm text-muted-foreground">Connect with:</p>
-               <div className="flex justify-center space-x-4 mt-2">
-                  <Facebook className="h-6 w-6 text-gray-400 hover:text-primary transition-colors"/>
-                  <Instagram className="h-6 w-6 text-gray-400 hover:text-pink-500 transition-colors"/>
-                  <Twitter className="h-6 w-6 text-gray-400 hover:text-blue-400 transition-colors"/>
-                  <Linkedin className="h-6 w-6 text-gray-400 hover:text-blue-700 transition-colors"/>
-               </div>
-            </motion.div>
-          </motion.div>
+          <Zap className="h-16 w-16 md:h-20 md:w-20 text-primary inline-block p-3 bg-primary/10 rounded-full shadow-lg" />
         </motion.div>
-      );
-    };
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-600 to-pink-600">
+          🎯 Welcome to Social Pulse!
+        </h1>
+        <p className="text-lg md:text-xl text-muted-foreground mb-8">
+          Social Pulse is the all-in-one solution to effectively manage all your social media accounts. Create, schedule, organize, analyze, and automate your posts from one place.
+        </p>
+        <Link to="/signup">
+          <Button size="lg" className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
+            <Rocket className="mr-2 h-5 w-5" /> Start Your 7-Day Free Trial
+          </Button>
+        </Link>
+        <p className="text-sm text-muted-foreground mt-3">No credit card required!</p>
+      </motion.section>
 
-    export default LandingPage;
-  
+      {/* Features Section */}
+      <motion.section variants={itemVariants} className="w-full max-w-6xl mx-auto mb-20 md:mb-32 px-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">✨ Main Features</h2>
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={containerVariants}
+        >
+          {features.map((feature, index) => (
+            <motion.div key={index} variants={featureVariants} whileHover="hover">
+              <Card className="h-full text-center shadow-lg hover:shadow-primary/20 transition-shadow duration-300 bg-card/80 backdrop-blur-sm border-primary/10">
+                <CardHeader>
+                  <feature.icon className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <CardTitle>{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.section>
+
+      {/* Testimonials Section */}
+      <motion.section variants={itemVariants} className="w-full max-w-5xl mx-auto mb-20 md:mb-32 px-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">💬 What Users Say</h2>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          variants={containerVariants}
+        >
+          {testimonials.map((testimonial, index) => (
+            <motion.div key={index} variants={testimonialVariants}>
+              <Card className="h-full flex flex-col justify-between bg-gradient-to-br from-secondary/50 to-background dark:from-secondary/20 dark:to-card border p-6 rounded-xl shadow-md">
+                <blockquote className="italic text-muted-foreground mb-4">"{testimonial.quote}"</blockquote>
+                <footer className="text-sm font-semibold text-primary flex items-center">
+                  <Star className="h-4 w-4 mr-1.5 fill-yellow-400 text-yellow-500" />
+                  {testimonial.author}
+                </footer>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.section>
+
+
+      {/* Target Audience & Benefits Section */}
+      <motion.section variants={itemVariants} className="w-full max-w-4xl mx-auto mb-20 md:mb-32 px-4 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">👤 Designed For</h2>
+        <p className="text-lg text-muted-foreground mb-10">
+          Social media managers, content creators, freelancers, startups, and agencies.
+        </p>
+
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">👍 Why Choose Social Pulse?</h2>
+        <div className="flex flex-wrap justify-center gap-4 text-lg text-primary">
+          <span className="flex items-center bg-primary/10 px-3 py-1 rounded-full"><CheckCircle className="h-5 w-5 mr-2 text-green-500" /> Save time</span>
+          <span className="flex items-center bg-primary/10 px-3 py-1 rounded-full"><CheckCircle className="h-5 w-5 mr-2 text-green-500" /> Improve engagement</span>
+          <span className="flex items-center bg-primary/10 px-3 py-1 rounded-full"><CheckCircle className="h-5 w-5 mr-2 text-green-500" /> Optimize content</span>
+          <span className="flex items-center bg-primary/10 px-3 py-1 rounded-full"><CheckCircle className="h-5 w-5 mr-2 text-green-500" /> Work efficiently</span>
+        </div>
+      </motion.section>
+
+      {/* Final CTA */}
+      <motion.section variants={itemVariants} className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Boost Your Social Media?</h2>
+        <Link to="/signup">
+          <Button size="lg" className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white shadow-lg transform hover:scale-105 transition-transform duration-300">
+            <Rocket className="mr-2 h-5 w-5" /> Get Started Free for 7 Days
+          </Button>
+        </Link>
+        <p className="text-sm text-muted-foreground mt-3">No credit card required. Cancel anytime.</p>
+      </motion.section>
+
+    </motion.div>
+  );
+};
+
+export default LandingPage;
