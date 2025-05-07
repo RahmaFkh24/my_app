@@ -1,4 +1,4 @@
-/*import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import authService from './authService'
 import SignupPage from '../pages/SignupPage'
 
@@ -96,4 +96,4 @@ export const authSlice = createSlice({
 })
 
 export const { reset } = authSlice.actions
-export default authSlice.reducer*/
+export default authSlice.reducer

@@ -2,7 +2,14 @@
 module.exports = {
   content: [],
   theme: {
-    extend: {},
+    theme: {
+      extend: {
+        colors: {
+          primary: 'hsl(var(--primary))',
+          // Define other colors with explicit values
+        }
+      }
+    }
   },
   plugins: [],
 }
