@@ -16,6 +16,7 @@ import AccountsPage from '@/pages/AccountsPage';
 import SettingsPage from '@/pages/SettingsPage';
 import { Toaster } from "@/components/ui/toaster";
 
+
 // Helpers
 const getIsNewUser = () => localStorage.getItem('isNewUser') === 'true';
 

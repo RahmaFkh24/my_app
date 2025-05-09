@@ -56,7 +56,7 @@ const Sidebar = () => {
             <line x1="14" x2="14" y1="1" y2="4" />
           </svg>
         </motion.div>
-        <h1 className="text-2xl font-bold ml-2 text-primary">Sociale Pulse</h1>
+        <h1 className="text-2xl font-bold ml-2 text-primary">Sociable</h1>
       </div>
       <nav className="flex-grow">
         <ul>
